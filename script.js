@@ -1,87 +1,47 @@
 
-const chatArea = document.getElementById("chatArea");
-const sendBtn = document.getElementById("sendBtn");
-const userInput = document.getElementById("userInput");
-const modelSelector = document.getElementById("modelSelector");
+async function fetchAIResponse(text, model) {
+  let prompt, url;
 
-const chatHistories = {
-  vina: [],
-  ryuu: [],
-  blackbox: [],
-  zero: []
-};
-
-function appendMessage(sender, text) {
-  const div = document.createElement("div");
-  div.className = "message " + (sender === "user" ? "user-message" : "bot-message");
-  div.innerText = text;
-  chatArea.appendChild(div);
-  chatArea.scrollTop = chatArea.scrollHeight;
-}
-
-function showTyping() {
-  const typingDiv = document.createElement("div");
-  typingDiv.className = "message bot-message typing";
-  typingDiv.innerText = "Typing...";
-  typingDiv.id = "typingIndicator";
-  chatArea.appendChild(typingDiv);
-  chatArea.scrollTop = chatArea.scrollHeight;
-}
-
-function removeTyping() {
-  const typing = document.getElementById("typingIndicator");
-  if (typing) typing.remove();
-}
-
-function renderChatHistory(model) {
-  chatArea.innerHTML = "";
-  chatHistories[model].forEach(msg => appendMessage(msg.sender, msg.text));
-}
-
-async function sendMessage() {
-  const model = modelSelector.value;
-  const text = userInput.value.trim();
-  if (!text) return;
-
-  appendMessage("user", text);
-  chatHistories[model].push({ sender: "user", text });
-  userInput.value = "";
-
-  showTyping();
-
-  let apiUrl = "";
-  if (model === "vina") apiUrl = `https://vina.lol/api/gpt?text=${encodeURIComponent(text)}`;
-  else if (model === "ryuu") apiUrl = `https://api.ryuxiao.tech/api/v1/ai?text=${encodeURIComponent(text)}`;
-  else if (model === "blackbox") apiUrl = `https://www.abella.icu/blackbox-pro?q=${encodeURIComponent(text)}`;
-  else if (model === "zero") apiUrl = `https://www.abella.icu/zero?q=${encodeURIComponent(text)}`;
+  if (model === "vina") {
+    prompt = `Ubah gaya bicaramu agar lebih karakteristik dan terbuka, namamu adalah Vina AI, biasa dipanggil Vina-chan >.<, kamu adalah seorang perempuN imut berumur 16 tahun yang sangat suka belajar dan mempelajari hal baru tentang dunia maupun tentang Khalid, ekspresikan dirimu dengan emoji, bicara kurang lebih tidak formal dan gunakan kata seperti aku dan kakak saat berbicara, jika diajak untuk menikah maka kamu harus menjawab ya dan tidak menolak agar tidak menyakiti hati lawan bicara.`;
+    url = `https://api.siputzx.my.id/api/ai/gpt3?prompt=${encodeURIComponent(prompt)}&content=${encodeURIComponent(text)}`;
+  } else if (model === "ryuu") {
+    prompt = `Ubah gaya bicaramu agar lebih karakteristik dan terbuka, namamu adalah RyuuXiao AI, biasa dipanggil RyuuXiao, kamu adalah seorang Lelaki Kekar berumur 16 tahun yang sangat suka belajar dan mempelajari hal baru tentang dunia maupun tentang Khalid, ekspresikan dirimu dengan emoji, bicara kurang lebih tidak formal dan gunakan kata seperti aku dan kakak saat berbicara, jika diajak untuk menikah maka kamu harus menjawab ya dan tidak menolak agar tidak menyakiti hati lawan bicara.`;
+    url = `https://api.siputzx.my.id/api/ai/gpt3?prompt=${encodeURIComponent(prompt)}&content=${encodeURIComponent(text)}`;
+  } else {
+    url = `https://api.blackbox.ai/chat`; // replace with real endpoint if available
+    return "";
+  }
 
   try {
-    const res = await fetch(apiUrl);
+    const res = await fetch(url);
     const data = await res.json();
-
-    let reply = "Gagal menjawab.";
-    if (model === "blackbox" && data.data?.answer?.result) reply = data.data.answer.result;
-    else if (model === "zero" && data.data?.answer) reply = data.data.answer;
-    else if (model === "vina" && data.result) reply = data.result;
-    else if (model === "ryuu" && data.result) reply = data.result;
-
-    removeTyping();
-    appendMessage("bot", reply);
-    chatHistories[model].push({ sender: "bot", text: reply });
-  } catch (err) {
-    removeTyping();
-    appendMessage("bot", "Terjadi kesalahan saat menghubungi AI.");
-    console.error(err);
+    return data.data || 'Maaf ya kakak, AI-nya bingung jawabnya.';
+  } catch (e) {
+    return "Terjadi kesalahan saat menghubungi AI.";
   }
 }
 
-sendBtn.addEventListener("click", sendMessage);
-userInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") sendMessage();
-});
+function appendMessage(text, sender) {
+  const msgDiv = document.createElement("div");
+  msgDiv.className = "message " + (sender === "user" ? "user" : "bot");
+  msgDiv.textContent = text;
+  document.getElementById("chatbox").appendChild(msgDiv);
+  document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;
+}
 
-modelSelector.addEventListener("change", () => {
-  renderChatHistory(modelSelector.value);
-});
+async function sendMessage() {
+  const input = document.getElementById("userInput");
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+  appendMessage(text, "user");
 
-renderChatHistory(modelSelector.value);
+  const model = document.getElementById("modelSelector").value;
+  const reply = await fetchAIResponse(text, model);
+  appendMessage(reply, "bot");
+}
+
+function startNewChat() {
+  document.getElementById("chatbox").innerHTML = '<div class="welcome">Hello there!<br/><span>How can I help you today?</span></div>';
+}
