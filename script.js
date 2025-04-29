@@ -10,7 +10,7 @@ async function fetchAIResponse(text, model) {
     url = `https://api.siputzx.my.id/api/ai/gpt3?prompt=${encodeURIComponent(prompt)}&content=${encodeURIComponent(text)}`;
   } else {
     url = `https://api.blackbox.ai/chat`; // replace with real endpoint if available
-    return "Blackbox Pro belum terintegrasi.";
+    return "";
   }
 
   try {
