@@ -1,29 +1,27 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chat AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat AI Multi Model</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="chat-container">
+  <div class="app-container">
     <header>
+      <h1>Chat AI</h1>
       <select id="modelSelector">
         <option value="vina">Vina AI</option>
         <option value="ryuu">RyuuXiao AI</option>
         <option value="blackbox">Blackbox Pro</option>
         <option value="zero">Zero AI</option>
       </select>
-      <button onclick="startNewChat()">+ New Chat</button>
     </header>
-    <main id="chatbox">
-      <div class="welcome">Hello there!<br/><span>How can I help you today?</span></div>
-    </main>
+    <main id="chatArea"></main>
     <footer>
-      <input type="text" id="userInput" placeholder="Send a message..." />
-      <button onclick="sendMessage()">➤</button>
+      <input type="text" id="userInput" placeholder="Tulis pesan..." autocomplete="off" />
+      <button id="sendBtn">Kirim</button>
     </footer>
   </div>
   <script src="script.js"></script>
