@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat AI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="chat-container">
+    <header>
+      <select id="modelSelector">
+        <option value="vina">Vina AI</option>
+        <option value="ryuu">RyuuXiao AI</option>
+        <option value="blackbox">Blackbox Pro</option>
+      </select>
+      <button onclick="startNewChat()">+ New Chat</button>
+    </header>
+    <main id="chatbox">
+      <div class="welcome">Hello there!<br/><span>How can I help you today?</span></div>
+    </main>
+    <footer>
+      <input type="text" id="userInput" placeholder="Send a message..." />
+      <button onclick="sendMessage()">➤</button>
+    </footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
